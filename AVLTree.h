@@ -12,6 +12,7 @@ public:
     Compare()= default;
     virtual ~Compare()= default;
     virtual bool operator()(const K& key1, const K& key2) const {return key1<key2;};
+    virtual Compare* clone()=0;
 };
 
 template <class K, class T>
@@ -31,15 +32,16 @@ public:
     class Iterator;
     Iterator begin() const;
     Iterator end() const;
-    explicit AVLTree(Compare<K>* compare): root(nullptr), compare(compare), cmp(*compare), tree_size(0){}
+    explicit AVLTree(Compare<K>* compare): root(nullptr), compare(compare->clone()), cmp(*compare), tree_size(0){}
     AVLTree(const AVLTree &tree);
     AVLTree(const AVLTree &t1, const AVLTree &t2);
     AVLTree<K, T>& operator=(const AVLTree & tree);
     ~AVLTree();
     Iterator find(const K& key) const;
     Iterator find_Kth_element(int k) const;
-    int get_sum_less_then(Iterator);
+    int get_sum_less_then(const Iterator&);
     Iterator insert(const K& key, const T& data=T());
+    void erase(const Iterator&);
     void erase(const K& key);
     bool empty() const;
     int size() const;
@@ -365,10 +367,11 @@ bool AVLTree<K, T>::empty() const{
     return root == nullptr;
 }
 
+
 template<class K, class T>
-void AVLTree<K, T>::erase(const K &key) {
-    Stack<Node*> s;
-    Node* n= find_rec(key, root, &s);
+void AVLTree<K, T>::erase(const AVLTree::Iterator &it) {
+    Stack<Node*> s = it.stack;
+    Node* n= it.node;
     if(!n)
         throw KeyNotExists();
     Node* father= s.empty() ? nullptr : s.top();
@@ -436,7 +439,7 @@ void AVLTree<K, T>::clear() {
 }
 
 template<class K, class T>
-AVLTree<K, T>::AVLTree(const AVLTree &tree) :root(nullptr), compare(tree.compare),
+AVLTree<K, T>::AVLTree(const AVLTree &tree) :root(nullptr), compare(tree.compare->clone()),
     cmp(*compare), tree_size(0) {
     *this=tree;
 
@@ -455,6 +458,7 @@ AVLTree<K, T> &AVLTree<K, T>::operator=(const AVLTree &tree) {
 template<class K, class T>
 AVLTree<K, T>::~AVLTree() {
     clear();
+    delete compare;
 }
 
 template<class K, class T>
@@ -537,7 +541,13 @@ typename AVLTree<K,T>::Iterator AVLTree<K, T>::find_Kth_element(int k) const {
 }
 
 template<class K, class T>
-int AVLTree<K, T>::get_sum_less_then(AVLTree::Iterator it) {
+void AVLTree<K, T>::erase(const K &key) {
+    erase(find(key));
+}
+
+
+template<class K, class T>
+int AVLTree<K, T>::get_sum_less_then(const AVLTree::Iterator&it) {
     if(it.node== nullptr)
         throw 0;//Iterator::InvalidIterator();
     auto to_find = it.node;
@@ -560,6 +570,7 @@ int AVLTree<K, T>::get_sum_less_then(AVLTree::Iterator it) {
 
     }
 }
+
 
 
 #endif //AVLTREE_H
