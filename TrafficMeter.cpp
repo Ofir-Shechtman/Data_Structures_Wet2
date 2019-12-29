@@ -26,6 +26,27 @@ Compare<Traffic> *CompareServer<ServerID>::clone() {
 }
 
 
+TrafficMeter::TrafficMeter() :
+        traffic_cmp(new CompareTraffic<Traffic>()),
+        server_cmp(new CompareServer<ServerID>()),
+        traffic_tree(traffic_cmp),
+        map_tree(server_cmp)
+{}
+
+TrafficMeter::~TrafficMeter() {
+    delete traffic_cmp;
+    delete server_cmp;
+
+}
+
+TrafficMeter::TrafficMeter(const TrafficMeter &tm) :
+        traffic_cmp(dynamic_cast<CompareTraffic<Traffic>*>(tm.traffic_cmp->clone())),
+        server_cmp(dynamic_cast<CompareServer<ServerID>*>(tm.server_cmp->clone())),
+        traffic_tree(traffic_cmp),
+        map_tree(server_cmp)
+{}
+
+
 
 TrafficMeter::TrafficMeter(const TrafficMeter &m1, const TrafficMeter &m2):
         traffic_tree(m1.traffic_tree, m2.traffic_tree),

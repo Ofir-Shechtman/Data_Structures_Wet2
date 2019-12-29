@@ -35,7 +35,7 @@ public:
     const T& find(const Key&) const;
     bool contains(const Key&) const;
     T& operator[](const Key&);
-    void insert(const Key&, const T&);
+    void insert(const Key&, const T& = T());
     void erase(const Key&);
 
     class KeyNotExists : public std::exception{};

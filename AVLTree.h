@@ -12,7 +12,7 @@ public:
     Compare()= default;
     virtual ~Compare()= default;
     virtual bool operator()(const K& key1, const K& key2) const {return key1<key2;};
-    virtual Compare* clone()=0;
+    virtual Compare* clone(){return new Compare();};
 };
 
 template <class K, class T>
@@ -25,8 +25,8 @@ public: //TODO: remove after tests
     unsigned int tree_size;
     Node *find_rec(const K &key, Node *n, Stack<Node *> *s = nullptr) const;
     Node *insert_rec(const K &key, const T &data, Node *n, Stack<Node *> *s);
-    Array<Node> to_array();
-    static Node *arr2tree(AVLTree::Node* arr, int n);
+    Array<Node> to_array() const;
+    static Node *arr2tree(const AVLTree::Node* const arr, int n);
     static void balance_tree(Stack<Node*>*);
 public:
     class Iterator;
@@ -58,18 +58,18 @@ public: //TODO: remove after tests
     unsigned int height;
     struct Rank{
         int count;
-        int sum;
-        explicit Rank(unsigned int sum):count(1),sum(sum){}
+        T sum;
+        explicit Rank(T sum):count(1),sum(sum){}
     } rank;
     Node* right;
     Node* left;
-    explicit Node(K key, T data, unsigned int height = 0,
+    explicit Node(K key=K(), T data=T(), unsigned int height = 0,
                   Node *right = nullptr, Node *left = nullptr):
             key(key), data(data),height(height), rank(Rank(data)),
             right(right), left(left){}
     ~Node();
-    Node(const Node &node)= delete;
-    Node& operator=(const Node& node)=delete;
+    //Node(const Node &node)= delete;
+    //Node& operator=(const Node& node)=delete;
     int BF();
     void balance();
     void LL();
@@ -91,7 +91,7 @@ class AVLTree<K,T>::Iterator{
     void Father();
 public:
     friend AVLTree<K,T>;
-    Iterator(Node* node, Stack<Node*> stack);
+    explicit Iterator(Node* node= nullptr, Stack<Node*> stack = Stack<Node*>());
     const K& key() const;
     const T& data() const;
     T& data();
@@ -355,8 +355,8 @@ void AVLTree<K, T>::Node::update_rank() {
     int left_count= left ? left->rank.count : 0;
     int right_count= right ? right->rank.count : 0;
     rank.count= 1  + left_count + right_count;
-    int left_sum= left ? left->rank.sum : 0;
-    int right_sum= right ? right->rank.sum : 0;
+    T left_sum= left ? left->rank.sum : 0;
+    T right_sum= right ? right->rank.sum : 0;
     rank.sum= data + left_sum + right_sum;
 
 }
@@ -465,24 +465,42 @@ template<class K, class T>
 AVLTree<K, T>::AVLTree(const AVLTree &t1, const AVLTree &t2):
     compare(t1.compare), cmp(*compare), tree_size(t1.size()+t2.size())
 {
-    Array<Node> a1=t2.to_array(), a2=t2.to_array();
-    Array<Node> a3 = Array<Node>(a1, a2);
-    root = arr2tree(*a3, a3.size());
+    Array<Node> arr1=t2.to_array(), arr2=t2.to_array();
+    unsigned int n1=arr1.size(), n2=arr2.size();
+    Array<Node> arr3 = Array<Node>(n1+n2);
+
+    unsigned int i = 0, j = 0, k = 0;
+    while (i<n1 && j <n2)
+    {
+        if (cmp(arr1[i].key,arr2[j].key))
+            arr3[k++] = arr1[i++];
+        else
+            arr3[k++] = arr2[j++];
+    }
+
+    // Store remaining elements of first array
+    while (i < n1)
+        arr3[k++] = arr1[i++];
+
+    // Store remaining elements of second array
+    while (j < n2)
+        arr3[k++] = arr2[j++];
+    root = arr2tree(*arr3, arr3.size());
 }
 
 
 template<class K, class T>
-typename AVLTree<K, T>::Node* AVLTree<K, T>::arr2tree(AVLTree::Node *arr, int n) {
+typename AVLTree<K, T>::Node* AVLTree<K, T>::arr2tree(const AVLTree::Node * const arr, int n) {
     Node* root;
     if(n==0)
         return nullptr;
     if(n==1){
-        root=arr[0];
+        root= new Node(arr[0]);
         root->rank.count=1;
         root->rank.sum=root->data;
         return root;
     }
-    root=arr[n/2];
+    root= new Node(arr[n/2]);
     root->left=arr2tree(arr, n/2);
     root->right=arr2tree(arr+n/2+1, n-n/2-1);
     root->update_rank();
@@ -491,14 +509,15 @@ typename AVLTree<K, T>::Node* AVLTree<K, T>::arr2tree(AVLTree::Node *arr, int n)
 
 
 template<class K, class T>
-Array<typename AVLTree<K,T>::Node> AVLTree<K, T>::to_array() {
+Array<typename AVLTree<K,T>::Node> AVLTree<K, T>::to_array() const {
     Array<AVLTree<K,T>::Node> arr(tree_size);
     int i=0;
     for(auto it=begin(); it!=end(); ++it){
         auto node=it.node;
-        node.left= nullptr;
-        node.right= nullptr;
-        arr[i++]=node;
+        arr[i]= *node;
+        arr[i].left= nullptr;
+        arr[i].right= nullptr;
+        ++i;
     }
     return arr;
 }

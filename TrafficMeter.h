@@ -23,12 +23,14 @@ public:
 
 
 class TrafficMeter {
+    CompareTraffic<Traffic>* traffic_cmp;
+    CompareServer<ServerID>* server_cmp;
     AVLTree<Traffic,int> traffic_tree;
     AVLTree<ServerID, AVLTree<Traffic,int>::Iterator> map_tree;
 public:
-    TrafficMeter()= default;
-    ~TrafficMeter()= default;
-    TrafficMeter(const TrafficMeter&)= default;
+    TrafficMeter();
+    ~TrafficMeter();
+    TrafficMeter(const TrafficMeter&);
     TrafficMeter(const TrafficMeter& m1, const TrafficMeter& m2);
     TrafficMeter& operator=(const TrafficMeter&)= default;
     void remove_server(ServerID);
