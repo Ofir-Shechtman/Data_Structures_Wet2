@@ -22,12 +22,15 @@ public:
     Iterator insert(const List<T>::Iterator& pos, const T &value);
     Iterator push_back(const T &value);
     Iterator push_front(const T &value);
+    bool contains(const T &value);
     const T& front() const;
     const T& back() const;
     const int& size() const;
     void clear();
     Iterator begin() const;
+    Iterator begin();
     Iterator end() const;
+    Iterator end();
     bool empty() const;
     class EmptyList : public std::exception{};
 };
@@ -52,6 +55,7 @@ public:
     //~Iterator();
     //Iterator& operator=(const Iterator&);
     const T& operator*() const;
+    T& operator*();
     Iterator& operator++();
     Iterator& operator--();
     bool operator!=(const Iterator& it) const;
@@ -255,6 +259,25 @@ void List<T>::clear() {
     }
 }
 
+template<class T>
+bool List<T>::contains(const T &value) {
+    for(auto &val : *this) {
+        if (value == val)
+            return true;
+    }
+    return false;
+}
+
+template<class T>
+typename List<T>::Iterator List<T>::begin() {
+    return Iterator(head);
+}
+
+template<class T>
+typename List<T>::Iterator List<T>::end() {
+    return Iterator(nullptr);
+}
+
 
 template<class T>
 List<T>::Iterator::Iterator(Node *node) : node(node) {}
@@ -320,6 +343,13 @@ template<class T>
 bool List<T>::Iterator::operator!=(const List<T>::Iterator& it) const {
     return node!=it.node;
 }
+
+template<class T>
+T& List<T>::Iterator::operator*() {
+    return node->data;
+}
+
+
 
 
 #endif //LIST_H

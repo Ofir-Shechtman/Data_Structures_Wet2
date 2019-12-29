@@ -17,6 +17,7 @@ public:
     Array(const Array<T>&);
     Array(const Array<T>& arr1, const Array<T>& arr2);
     Array<T>& operator=(const Array&);
+    void resize(unsigned int n);
     const T* const operator*();
     T& operator[](unsigned int index);
     const T& operator[](unsigned int index) const;
@@ -41,7 +42,7 @@ Array<T>::Array(const Array<T>& arr1, const Array<T>& arr2) :
 {
     unsigned int n1=arr1.size(), n2=arr2.size();
     Array<T>& arr3 = *this;
-    int i = 0, j = 0, k = 0;
+    unsigned int i = 0, j = 0, k = 0;
     while (i<n1 && j <n2)
     {
         if (arr1[i] < arr2[j])
@@ -69,8 +70,8 @@ template<class T>
 Array<T> &Array<T>::operator=(const Array& array) {
     if (&array==this)
         return *this;
-    delete data;
     array_size=array.size();
+    delete[] data;
     data= new T[array_size];
     for(unsigned int i=0; i<array_size; ++i){
         data[i]= array[i];
@@ -100,6 +101,14 @@ unsigned int Array<T>::size() const {
 template<class T>
 const T *const Array<T>::operator*() {
     return data;
+}
+
+template<class T>
+void Array<T>::resize(unsigned int n) {
+    Array<T> new_arr = Array(n);
+    for(unsigned int i=0; i<n && i<array_size; ++i)
+        new_arr[i]= (*this)[i];
+    *this=new_arr;
 }
 
 
