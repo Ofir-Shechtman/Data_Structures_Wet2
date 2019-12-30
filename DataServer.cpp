@@ -22,8 +22,7 @@ void DataServer::RemoveServer(ServerID serverID) {
 }
 
 void DataServer::SetTraffic(ServerID serverID, int traffic) {
-    if(!servers.contains(serverID)) return;
-        //throw ServerIDNotExists();
+    if(!servers.contains(serverID)) throw ServerIDNotExists();
     traffic_meter.set_traffic(serverID, traffic);
     DataCenterID dataCenterID = servers.find(serverID);
     DataCenter dc = data_centers.Find(dataCenterID);
