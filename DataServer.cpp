@@ -31,8 +31,9 @@ void DataServer::SetTraffic(ServerID serverID, int traffic) {
 
 int DataServer::SumHighestTrafficServers(DataCenterID dataCenterID, int k) {
     Array<int> a(k);
-    if(dataCenterID == 0)
+    if(dataCenterID == 0) {
         return traffic_meter.sum_highest_traffic_servers(k);
+    }
     DataCenter dc = data_centers.Find(dataCenterID);
     return dc.sum_highest_traffic_servers(k);
 }

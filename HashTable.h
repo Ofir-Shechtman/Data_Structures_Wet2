@@ -37,7 +37,7 @@ public:
     T& operator[](const Key&);
     void insert(const Key&, const T& = T());
     void erase(const Key&);
-
+    int size() const;
     class KeyNotExists : public std::exception{};
     class KeyAlreadyExists : public std::exception{};
 
@@ -168,6 +168,11 @@ void HashTable<Key,T>::erase(const Key &key) {
         if ((*i).key == key)
             l.erase(i);
     }
+}
+
+template<typename Key, typename T>
+int HashTable<Key, T>::size() const {
+    return elements_count;
 }
 
 

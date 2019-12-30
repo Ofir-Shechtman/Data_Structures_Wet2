@@ -439,15 +439,18 @@ void AVLTree<K, T>::clear() {
 }
 
 template<class K, class T>
-AVLTree<K, T>::AVLTree(const AVLTree &tree) :root(nullptr), compare(tree.compare->clone()),
-    cmp(*compare), tree_size(0) {
+AVLTree<K, T>::AVLTree(const AVLTree &tree) :root(nullptr),
+    compare(tree.compare->clone()),
+    cmp(*compare),
+    tree_size(0) {
     *this=tree;
 
 }
 
 template<class K, class T>
 AVLTree<K, T> &AVLTree<K, T>::operator=(const AVLTree &tree) {
-    compare=tree.compare;
+    delete compare;
+    compare=tree.compare->clone();
     cmp=*compare;
     clear();
     for(auto i=tree.begin(); i!=tree.end(); ++i)

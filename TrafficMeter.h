@@ -34,8 +34,7 @@ public:
     void remove_server(ServerID);
     void set_traffic(ServerID, Traffic);
     int sum_highest_traffic_servers(int k);
-
-
+    class InvalidK : public std::exception{};
 };
 
 

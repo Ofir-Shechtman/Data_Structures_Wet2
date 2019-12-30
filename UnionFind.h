@@ -18,7 +18,7 @@ public:
     void Union(Key p,Key q);
     const T& Find(Key i) const;
     class InvalidInput : public std::exception{};
-
+    size_t size() const;
     void printArrs();
 };
 
@@ -51,7 +51,7 @@ void UnionFind<T>::Union(Key p,Key q) {
         max = findRoot(q);
         min = p;
     }
-    printf("max = %d, min = %d\n",elements[max].size,elements[min].size);
+    //printf("max = %d, min = %d\n",elements[max].size,elements[min].size);
     parent[min] = max;
     //elements[max].data = T(max,min);
     elements[min].size = 0;
@@ -80,6 +80,11 @@ void UnionFind<K>::printArrs() {
     for(Key i=0;i<array_size;i++){
         printf("parent[%d] = %d\n",i,parent[i]);
     }
+}
+
+template<class T>
+size_t UnionFind<T>::size() const {
+    return array_size-1;
 }
 
 #endif //DATA_STRUCTURES_WET2_2_UNIONFIND_H
