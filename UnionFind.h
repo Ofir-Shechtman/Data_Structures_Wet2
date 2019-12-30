@@ -17,6 +17,7 @@ public:
     explicit UnionFind(int n);
     void Union(Key p,Key q);
     const T& Find(Key i) const;
+    class InvalidInput : public std::exception{};
 
     void printArrs();
 };
@@ -30,6 +31,7 @@ struct UnionFind<T>::Element{
 template <class T>
 UnionFind<T>::UnionFind(int n):
         elements(Array<Element>(n+1)), parent(Array<Key>(n+1)), array_size(n+1){
+        if(n <= 0) throw InvalidInput();
         for(int i=1;i<=n;i++){
             elements[i].size = 1;
             parent[i]=i;
@@ -38,8 +40,9 @@ UnionFind<T>::UnionFind(int n):
 
 template <class T>
 void UnionFind<T>::Union(Key p,Key q) {
+    if ((p==q) || ((p<=0)||(p>array_size))|| ((q<=0)||(q>array_size)))
+        throw InvalidInput();
     Key min,max;
-    if ((p==q) || ((p<=0)||(p>array_size))|| ((q<=0)||(q>array_size)))return;
     if(elements[findRoot(p)].size > elements[findRoot(q)].size){
         max = findRoot(p);
         min = q;
@@ -57,15 +60,16 @@ void UnionFind<T>::Union(Key p,Key q) {
 
 template <class T>
 const T& UnionFind<T>::Find(Key i) const{
+    if(i <=0 || i>array_size) throw InvalidInput();
     return elements[findRoot(i)].data;
 }
 
 template <class T>
 Key UnionFind<T>::findRoot(Key i) const{
     while(elements[i].size == 0){
-i = parent[i];
-}
-return i;
+        i = parent[i];
+    }
+    return i;
 }
 
 template <class K>

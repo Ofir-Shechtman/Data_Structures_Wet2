@@ -21,6 +21,7 @@ public:
     void RemoveServer(ServerID serverID);
     void SetTraffic(ServerID serverID, int traffic);
     int SumHighestTrafficServers(DataCenterID dataCenterID, int k);
+    class ServerIDNotExists : public std::exception{};
 };
 
 
