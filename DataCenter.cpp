@@ -18,7 +18,6 @@ void DataCenter::set_traffic(ServerID id, Traffic traffic) {
     if(!servers.contains(id))
         throw ServerIDNotExists();
     traffic_meter.set_traffic(id, traffic);
-
 }
 
 int DataCenter::sum_highest_traffic_servers(int k) {

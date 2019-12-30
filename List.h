@@ -107,7 +107,7 @@ List<T>::~List() {
  * @tparam T
  * @param pos
  * @param value
- * @return iterator the the new element
+ * @return iterator the the new Element
  */
 template<class T>
 typename List<T>::Iterator List<T>::insert(const List<T>::Iterator &pos, const T &value) {
@@ -127,7 +127,7 @@ typename List<T>::Iterator List<T>::insert(const List<T>::Iterator &pos, const T
  * insert value to the end of the list
  * @tparam T
  * @param value
- * @return iterator the the new element
+ * @return iterator the the new Element
  */
 template<class T>
 typename List<T>::Iterator List<T>::push_back(const T &value) {
@@ -140,7 +140,7 @@ typename List<T>::Iterator List<T>::push_back(const T &value) {
  * insert value to the start of the list
  * @tparam T
  * @param value
- * @return iterator the the new element
+ * @return iterator the the new Element
  */
 template<class T>
 typename List<T>::Iterator List<T>::push_front(const T &value) {
@@ -155,7 +155,7 @@ typename List<T>::Iterator List<T>::push_front(const T &value) {
 }
 
 /*!
- * remove the last element
+ * remove the last Element
  * @tparam T
  */
 template<class T>
@@ -166,7 +166,7 @@ void List<T>::pop_back() {
 }
 
 /*!
- * remove the first element
+ * remove the first Element
  * @tparam T
  */
 template<class T>
