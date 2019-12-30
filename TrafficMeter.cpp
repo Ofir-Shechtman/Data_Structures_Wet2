@@ -65,7 +65,6 @@ void TrafficMeter::remove_server(ServerID id) {
 int TrafficMeter::sum_highest_traffic_servers(int k) {
     auto iterator= traffic_tree.find_Kth_element(k);
     return traffic_tree.get_sum_less_then(iterator);
-
 }
 
 

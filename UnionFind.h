@@ -4,61 +4,76 @@
 #include "Array.h"
 
 using namespace std;
-typedef int K;
+typedef unsigned int Key;
 
+template <class T>
 class UnionFind{
-    struct element;
-    Array<element> elements;
-    Array<int> parent;
-    int array_size;
-    int findRoot(int i);
+    struct Element;
+    Array<Element> elements;
+    Array<Key> parent;
+    size_t array_size;
+    Key findRoot(Key i) const;
 public:
-    void printArrs();
     explicit UnionFind(int n);
-    void Union(int p,int q);
-    int Find(int i);
+    void Union(Key p,Key q);
+    const T& Find(Key i) const;
+
+    void printArrs();
 };
 
-struct UnionFind::element{
-    K data;
-    unsigned int size;
-    //TODO: constructor?
+template <class T>
+struct UnionFind<T>::Element{
+    T data;
+    size_t size;
 };
 
-UnionFind::UnionFind(int n):
-        elements(Array<element>(n)), parent(Array<int>(n)), array_size(n){
-        for(int i=0;i<n;i++){
+template <class T>
+UnionFind<T>::UnionFind(int n):
+        elements(Array<Element>(n+1)), parent(Array<Key>(n+1)), array_size(n+1){
+        for(int i=1;i<=n;i++){
             elements[i].size = 1;
             parent[i]=i;
         }
 }
 
-void UnionFind::Union(int p,int q) {
-    if ((p==q) || ((p<0)||(p>=array_size))|| ((q<0)||(q>=array_size)))return;
-    int max = elements[findRoot(p)].size > elements[findRoot(q)].size ? p : q;
-    int min = elements[findRoot(p)].size <= elements[findRoot(q)].size ? p : q;
-    printf("max = %d, min = %d\n",max,min);
-    parent[min] = max;
-    elements[findRoot(max)].size++;
-    elements[min].size = 0;
-}
-
-int UnionFind::Find(int i)  {
-    return findRoot(i);
-}
-
-int UnionFind::findRoot(int i) {
-    while(elements[i].size == 0){
-        i = parent[i];
+template <class T>
+void UnionFind<T>::Union(Key p,Key q) {
+    Key min,max;
+    if ((p==q) || ((p<=0)||(p>array_size))|| ((q<=0)||(q>array_size)))return;
+    if(elements[findRoot(p)].size > elements[findRoot(q)].size){
+        max = findRoot(p);
+        min = q;
     }
-    return i;
+    else{
+        max = findRoot(q);
+        min = p;
+    }
+    printf("max = %d, min = %d\n",elements[max].size,elements[min].size);
+    parent[min] = max;
+    //elements[max].data = T(max,min);
+    elements[min].size = 0;
+    elements[max].size++;
 }
 
-void UnionFind::printArrs() {
-    for(int i=0;i<array_size;i++){
+template <class T>
+const T& UnionFind<T>::Find(Key i) const{
+    return elements[findRoot(i)].data;
+}
+
+template <class T>
+Key UnionFind<T>::findRoot(Key i) const{
+    while(elements[i].size == 0){
+i = parent[i];
+}
+return i;
+}
+
+template <class K>
+void UnionFind<K>::printArrs() {
+    for(Key i=0;i<array_size;i++){
         printf("elements[%d].size = %d\n", i, elements[i].size);
     }
-    for(int i=0;i<array_size;i++){
+    for(Key i=0;i<array_size;i++){
         printf("parent[%d] = %d\n",i,parent[i]);
     }
 }
