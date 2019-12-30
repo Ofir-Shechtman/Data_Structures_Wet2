@@ -58,14 +58,14 @@ public: //TODO: remove after tests
     unsigned int height;
     struct Rank{
         int count;
-        T sum;
-        explicit Rank(T sum):count(1),sum(sum){}
+        K sum;
+        explicit Rank(K sum):count(1),sum(sum){}
     } rank;
     Node* right;
     Node* left;
     explicit Node(K key=K(), T data=T(), unsigned int height = 0,
                   Node *right = nullptr, Node *left = nullptr):
-            key(key), data(data),height(height), rank(Rank(data)),
+            key(key), data(data),height(height), rank(Rank(key)),
             right(right), left(left){}
     ~Node();
     //Node(const Node &node)= delete;
@@ -355,9 +355,9 @@ void AVLTree<K, T>::Node::update_rank() {
     int left_count= left ? left->rank.count : 0;
     int right_count= right ? right->rank.count : 0;
     rank.count= 1  + left_count + right_count;
-    T left_sum= left ? left->rank.sum : 0;
-    T right_sum= right ? right->rank.sum : 0;
-    rank.sum= data + left_sum + right_sum;
+    K left_sum= left ? left->rank.sum : 0;
+    K right_sum= right ? right->rank.sum : 0;
+    rank.sum= key + left_sum + right_sum;
 
 }
 
@@ -497,7 +497,7 @@ typename AVLTree<K, T>::Node* AVLTree<K, T>::arr2tree(const AVLTree::Node * cons
     if(n==1){
         root= new Node(arr[0]);
         root->rank.count=1;
-        root->rank.sum=root->data;
+        root->rank.sum=root->key;
         return root;
     }
     root= new Node(arr[n/2]);
