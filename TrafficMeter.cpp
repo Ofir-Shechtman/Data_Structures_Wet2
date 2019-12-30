@@ -10,7 +10,7 @@ bool CompareTraffic<Traffic>::operator()(const Traffic &a, const Traffic &b) con
 }
 
 template<class Traffic>
-Compare<Traffic> *CompareTraffic<Traffic>::clone() {
+Compare<Traffic> *CompareTraffic<Traffic>::clone() const {
     return new CompareTraffic<Traffic>();
 }
 
@@ -21,18 +21,16 @@ CompareServer<ServerID>::operator()(const ServerID &a, const ServerID &b) const 
 }
 
 template<class ServerID>
-Compare<Traffic> *CompareServer<ServerID>::clone() {
+Compare<Traffic> *CompareServer<ServerID>::clone() const {
     return new CompareServer<ServerID>();
 }
 
 
 TrafficMeter::TrafficMeter() :
-        traffic_cmp(new CompareTraffic<Traffic>()),
-        server_cmp(new CompareServer<ServerID>()),
-        traffic_tree(traffic_cmp),
-        map_tree(server_cmp)
+        traffic_tree(CompareTraffic<Traffic>()),
+        map_tree(CompareServer<ServerID>())
 {}
-
+/*
 TrafficMeter::~TrafficMeter() {
     delete traffic_cmp;
     delete server_cmp;
@@ -45,7 +43,7 @@ TrafficMeter::TrafficMeter(const TrafficMeter &tm) :
         traffic_tree(traffic_cmp),
         map_tree(server_cmp)
 {}
-
+*/
 
 
 TrafficMeter::TrafficMeter(const TrafficMeter &m1, const TrafficMeter &m2):

@@ -12,10 +12,10 @@ public:
     Compare()= default;
     virtual ~Compare()= default;
     virtual bool operator()(const K& key1, const K& key2) const {return key1<key2;};
-    virtual Compare* clone(){return new Compare();};
+    virtual Compare* clone() const{return new Compare();};
 };
 
-template <class K, class T>
+template <class K, class T=int>
 class AVLTree{
 public: //TODO: remove after tests
     struct Node;
@@ -32,7 +32,7 @@ public:
     class Iterator;
     Iterator begin() const;
     Iterator end() const;
-    explicit AVLTree(Compare<K>* compare): root(nullptr), compare(compare->clone()), cmp(*compare), tree_size(0){}
+    explicit AVLTree(const Compare<K>& compare_tmp): root(nullptr), compare(compare_tmp.clone()), cmp(*compare), tree_size(0){}
     AVLTree(const AVLTree &tree);
     AVLTree(const AVLTree &t1, const AVLTree &t2);
     AVLTree<K, T>& operator=(const AVLTree & tree);
