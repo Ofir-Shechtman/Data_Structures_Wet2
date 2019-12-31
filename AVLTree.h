@@ -38,9 +38,12 @@ public:
     AVLTree<K, T>& operator=(const AVLTree & tree);
     ~AVLTree();
     Iterator find(const K& key) const;
+    const T& get(const K& key) const;
+    bool contains(const K& key) const;
     Iterator find_Kth_element(int k) const;
     int get_sum_less_then(const Iterator&);
     Iterator insert(const K& key, const T& data=T());
+    T& operator[](const K& key);
     void erase(const Iterator&);
     void erase(const K& key);
     bool empty() const;
@@ -507,6 +510,7 @@ typename AVLTree<K, T>::Node* AVLTree<K, T>::arr2tree(const AVLTree::Node * cons
     root= new Node(arr[n/2]);
     root->left=arr2tree(arr, n/2);
     root->right=arr2tree(arr+n/2+1, n-n/2-1);
+    root->update_height();
     root->update_rank();
     return root;
 }
@@ -595,6 +599,23 @@ int AVLTree<K, T>::get_sum_less_then(const AVLTree::Iterator&it) {
     }
 }
 
+template<class K, class T>
+T &AVLTree<K, T>::operator[](const K &key) {
+    auto iter = find(key);
+    if(iter==end())
+        iter = insert(key);
+    return iter.data();
+}
+
+template<class K, class T>
+bool AVLTree<K, T>::contains(const K &key) const {
+    return find(key)!=end();
+}
+
+template<class K, class T>
+const T &AVLTree<K, T>::get(const K &key) const {
+    return find(key).data();
+}
 
 
 #endif //AVLTREE_H

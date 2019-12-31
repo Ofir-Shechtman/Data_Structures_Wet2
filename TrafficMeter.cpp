@@ -51,14 +51,15 @@ TrafficMeter::TrafficMeter(const TrafficMeter &m1, const TrafficMeter &m2):
         map_tree(m1.map_tree, m2.map_tree){}
 
 void TrafficMeter::set_traffic(ServerID id, Traffic traffic) {
-    auto iterator = traffic_tree.insert(traffic);
-    map_tree.insert(id, iterator);
-
+    if(map_tree.contains(id))
+        traffic_tree[map_tree.get(id)]=traffic;
+    map_tree[id]=traffic;
 }
 
 void TrafficMeter::remove_server(ServerID id) {
-    auto iterator= map_tree.find(id);
-    traffic_tree.erase(iterator.data());
+    auto traffic = map_tree.get(id);
+    traffic_tree.erase(traffic);
+    map_tree.erase(id);
 
 }
 

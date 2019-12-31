@@ -24,7 +24,7 @@ public:
 
 class TrafficMeter {
     AVLTree<Traffic> traffic_tree;
-    AVLTree<ServerID, AVLTree<Traffic,int>::Iterator> map_tree;
+    AVLTree<ServerID, Traffic> map_tree;
 public:
     TrafficMeter();
     ~TrafficMeter()= default;
