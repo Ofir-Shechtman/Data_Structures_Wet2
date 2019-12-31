@@ -602,7 +602,7 @@ int AVLTree<K, T>::get_sum_less_then(const AVLTree::Iterator&it) {
 template<class K, class T>
 T &AVLTree<K, T>::operator[](const K &key) {
     auto iter = find(key);
-    if(iter==end())
+    if(!(iter!=end()))
         iter = insert(key);
     return iter.data();
 }
