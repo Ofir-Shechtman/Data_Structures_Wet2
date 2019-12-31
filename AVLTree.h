@@ -453,7 +453,6 @@ AVLTree<K, T>::AVLTree(const AVLTree &tree) :root(nullptr),
 
 template<class K, class T>
 AVLTree<K, T> &AVLTree<K, T>::operator=(const AVLTree &tree) {
-    delete compare;
     compare=tree.compare->clone();
     cmp=*compare;
     clear();
@@ -582,10 +581,10 @@ int AVLTree<K, T>::get_sum_less_then(const AVLTree::Iterator&it) {
     auto n = root;
     unsigned int sum=n->left ? n->left->rank.sum : 0;
     while(true){
-        if(n==to_find)
+        if(n->key==to_find->key)
             return sum+n->key;
         else if(cmp(n->key, to_find->key)) {
-            sum += n->data;
+            sum += n->key;
             n = n->right;
             int left_sum= n->left ? n->left->rank.sum : 0;
             sum += left_sum;
@@ -601,15 +600,24 @@ int AVLTree<K, T>::get_sum_less_then(const AVLTree::Iterator&it) {
 
 template<class K, class T>
 T &AVLTree<K, T>::operator[](const K &key) {
-    auto iter = find(key);
-    if(!(iter!=end()))
+    Iterator iter;
+    if(contains(key))
+        iter = find(key);
+    else{
         iter = insert(key);
+    }
     return iter.data();
 }
 
 template<class K, class T>
 bool AVLTree<K, T>::contains(const K &key) const {
-    return find(key)!=end();
+    try{
+        find(key)!=end();
+        return true;
+    }
+    catch(KeyNotExists&){
+        return false;
+    }
 }
 
 template<class K, class T>

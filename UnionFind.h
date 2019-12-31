@@ -57,6 +57,7 @@ void UnionFind<T>::Union(Key p,Key q) {
     elements[max].data = T(elements[max].data,elements[min].data);
     elements[min].size = 0;
     elements[max].size++;
+    //printArrs();
 }
 
 template<class T>

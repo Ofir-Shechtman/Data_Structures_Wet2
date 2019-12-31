@@ -18,13 +18,14 @@ template<class ServerID>
 class CompareServer : public Compare<ServerID>{
 public:
     bool operator()(const ServerID& a, const ServerID& b) const;
-    Compare<Traffic>* clone() const;
+    Compare<ServerID>* clone() const;
 };
 
 
 class TrafficMeter {
     AVLTree<Traffic> traffic_tree;
-    AVLTree<ServerID, Traffic> map_tree;
+    AVLTree<ServerID,Traffic> map_tree;
+
 public:
     TrafficMeter();
     ~TrafficMeter()= default;
