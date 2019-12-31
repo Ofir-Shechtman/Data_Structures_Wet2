@@ -63,9 +63,7 @@ void TrafficMeter::remove_server(ServerID id) {
 }
 
 int TrafficMeter::sum_highest_traffic_servers(int k) {
-    if (k > traffic_tree.size() || k <= 0)
-        throw InvalidK();//TODO: change
-    auto iterator= traffic_tree.find_Kth_element(k);
+    auto iterator= traffic_tree.find_Kth_element(min(k,traffic_tree.size()));
     return traffic_tree.get_sum_less_then(iterator);
 }
 

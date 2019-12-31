@@ -22,6 +22,9 @@ StatusType MergeDataCenters(void *DS, int dataCenter1, int dataCenter2) {
         ((DataServer*)DS)->MergeDataCenters(dataCenter1,dataCenter2);
         return SUCCESS;
     }
+    catch(UnionFind<TrafficMeter>::InvalidInput&) {
+        return INVALID_INPUT;
+    }
     catch(std::bad_alloc&){
         return ALLOCATION_ERROR;
     }
@@ -37,6 +40,9 @@ StatusType AddServer(void *DS, int dataCenterID, int serverID) {
     try{
         ((DataServer*)DS)->AddServer(dataCenterID,serverID);
         return SUCCESS;
+    }
+    catch(UnionFind<TrafficMeter>::InvalidInput&) {
+        return INVALID_INPUT;
     }
     catch(std::bad_alloc&){
         return ALLOCATION_ERROR;
@@ -63,7 +69,7 @@ StatusType RemoveServer(void *DS, int serverID) {
 }
 
 StatusType SetTraffic(void *DS, int serverID, int traffic) {
-    if(DS == NULL || serverID <= 0) {
+    if(DS == NULL || serverID <= 0 || traffic<0) {
         return INVALID_INPUT;
     }
     try{
@@ -80,12 +86,15 @@ StatusType SetTraffic(void *DS, int serverID, int traffic) {
 
 StatusType
 SumHighestTrafficServers(void *DS, int dataCenterID, int k, int *traffic) {
-    if(DS == NULL || dataCenterID <= 0 || k <= 0) {
+    if(DS == NULL || dataCenterID < 0 || k < 0) {
         return INVALID_INPUT;
     }
     try{
         *traffic = ((DataServer*)DS)->SumHighestTrafficServers(dataCenterID,k);
         return SUCCESS;
+    }
+    catch(UnionFind<TrafficMeter>::InvalidInput&) {
+        return INVALID_INPUT;
     }
     catch(std::bad_alloc&){
         return ALLOCATION_ERROR;

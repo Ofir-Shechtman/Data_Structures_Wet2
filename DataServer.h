@@ -3,14 +3,14 @@
 
 #include <iostream>
 #include "UnionFind.h"
-#include "DataCenter.h"
+#include "HashTable.h"
 #include "TrafficMeter.h"
 
 using namespace std;
 typedef unsigned int DataCenterID;
 
 class DataServer {
-    UnionFind<DataCenter> data_centers;
+    UnionFind<TrafficMeter> data_centers;
     HashTable<ServerID, DataCenterID> servers;
     TrafficMeter traffic_meter;
 public:

@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Array.h"
 #include "List.h"
+#include "utilities.h"
 
 
 class HashFunction{
@@ -120,32 +121,6 @@ void HashTable<Key,T>::insert(const Key &key, const T &data) {
 }
 
 
-static bool isPrime(int n)
-{
-    // Corner cases
-    if (n <= 1)
-        return false;
-    if (n <= 3)
-        return true;
-
-    // This is checked so that we can skip
-    // middle five numbers in below loop
-    if (n % 2 == 0 || n % 3 == 0)
-        return false;
-
-    for (int i = 5; i * i <= n; i = i + 6)
-        if (n % i == 0 || n % (i + 2) == 0)
-            return false;
-
-    return true;
-}
-
-static unsigned int first_prime_bigger(unsigned int n){
-    while(!isPrime(n))
-        ++n;
-    return n;
-}
-
 template <typename Key, typename T>
 void HashTable<Key,T>::resize_table() {
     unsigned int new_size = first_prime_bigger(table.size()*2);
@@ -158,6 +133,7 @@ void HashTable<Key,T>::resize_table() {
     }
     *this=new_ht;
 }
+
 
 template <typename Key, typename T>
 void HashTable<Key,T>::erase(const Key &key) {
@@ -174,6 +150,7 @@ template<typename Key, typename T>
 int HashTable<Key, T>::size() const {
     return elements_count;
 }
+
 
 
 #endif //DATA_STRUCTURES_WET2_HASHTABLE_H

@@ -48,6 +48,7 @@ public:
     void clear();
     class KeyNotExists : public exception{};
     class KeyAlreadyExists : public exception{};
+    class InvalidK : public exception{};
  };
 
 template <class K, class T>
@@ -540,14 +541,15 @@ typename AVLTree<K,T>::Iterator AVLTree<K, T>::find_Kth_element(int k) const {
         return end();
     Node *n=root;
     Stack<Node*> s;
-    int rank=n->left->rank.count+1;
+    int left_rank= n->left ? n->left->rank.count : 0;
+    int rank=left_rank+1;
     while(true){
         if(k== rank)
             return Iterator(n, s);
         else if(k>rank) {
             s.push(n);
             n = n->right;
-            int left_rank= n->left ? n->left->rank.count : 0;
+            left_rank= n->left ? n->left->rank.count : 0;
             rank += left_rank + 1;
         }
         else{
@@ -571,13 +573,13 @@ void AVLTree<K, T>::erase(const K &key) {
 template<class K, class T>
 int AVLTree<K, T>::get_sum_less_then(const AVLTree::Iterator&it) {
     if(it.node== nullptr)
-        throw 0;//Iterator::InvalidIterator();
+        throw InvalidK();//Iterator::InvalidIterator();
     auto to_find = it.node;
     auto n = root;
-    unsigned int sum=n->left->rank.sum;
+    unsigned int sum=n->left ? n->left->rank.sum : 0;
     while(true){
         if(n==to_find)
-            return sum+n->data;
+            return sum+n->key;
         else if(cmp(n->key, to_find->key)) {
             sum += n->data;
             n = n->right;
