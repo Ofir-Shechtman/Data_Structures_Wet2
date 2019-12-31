@@ -467,9 +467,9 @@ AVLTree<K, T>::~AVLTree() {
 
 template<class K, class T>
 AVLTree<K, T>::AVLTree(const AVLTree &t1, const AVLTree &t2):
-    compare(t1.compare), cmp(*compare), tree_size(t1.size()+t2.size())
+    compare(t1.compare->clone()), cmp(*compare), tree_size(t1.size()+t2.size())
 {
-    Array<Node> arr1=t2.to_array(), arr2=t2.to_array();
+    Array<Node> arr1=t1.to_array(), arr2=t2.to_array();
     unsigned int n1=arr1.size(), n2=arr2.size();
     Array<Node> arr3 = Array<Node>(n1+n2);
 
