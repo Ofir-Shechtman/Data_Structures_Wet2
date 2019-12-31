@@ -140,9 +140,11 @@ void HashTable<Key,T>::erase(const Key &key) {
     if(!contains(key))
         throw  KeyNotExists();
     List<Element> &l = table[hash(key)];
-    for(auto i=l.begin(); i!= l.end(); ++i) {
-        if ((*i).key == key)
+    for(auto i=l.begin(); i!= l.end();) {
+        if ((*i).key == key) {
             l.erase(i);
+            break;
+        }
     }
 }
 

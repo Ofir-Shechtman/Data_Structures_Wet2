@@ -21,7 +21,7 @@ public: //TODO: remove after tests
     struct Node;
     Node *root;
     Compare<K>* compare;
-    Compare<K>& cmp;
+    Compare<K> cmp;
     unsigned int tree_size;
     Node *find_rec(const K &key, Node *n, Stack<Node *> *s = nullptr) const;
     Node *insert_rec(const K &key, const T &data, Node *n, Stack<Node *> *s);
@@ -453,6 +453,7 @@ AVLTree<K, T>::AVLTree(const AVLTree &tree) :root(nullptr),
 
 template<class K, class T>
 AVLTree<K, T> &AVLTree<K, T>::operator=(const AVLTree &tree) {
+    delete compare;
     compare=tree.compare->clone();
     cmp=*compare;
     clear();
