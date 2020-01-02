@@ -4,7 +4,7 @@
 #include <iostream>
 #include "Array.h"
 #include "List.h"
-#include "utilities.h"
+//#include "utilities.h"
 
 
 class HashFunction{
@@ -28,10 +28,9 @@ public://TODO: remove after test
     int elements_count;
     void resize_table();
 public:
-    explicit HashTable(int r_max=3, unsigned int size=11);
+    explicit HashTable(int r_max=3, unsigned int size=8);
     ~HashTable()= default;
     HashTable(const HashTable& ht)= default;
-    HashTable(const HashTable& ht1, const HashTable& ht2);
     HashTable& operator=(const HashTable&)= default;
     const T& find(const Key&) const;
     bool contains(const Key&) const;
@@ -56,23 +55,7 @@ HashTable<Key,T>::HashTable(int r_max, unsigned int size) :
     elements_count(0)
     {}
 
-template <typename Key, typename T>
-HashTable<Key,T>::HashTable(const HashTable &ht1, const HashTable &ht2) :
-        table(Array<List<Element>>(ht1.table.size()+ht2.table.size())),
-        hash(HashFunction(table.size())),
-        r_max(ht1.r_max),
-        elements_count(ht1.elements_count+ht2.elements_count) {
-    for (unsigned int i = 0; i < ht1.table.size(); ++i) {
-        auto &l = ht1.table[i];
-        for (auto &j : l)
-            insert(j.key, j.data);
-    }
-    for (unsigned int i = 0; i < ht2.table.size(); ++i) {
-        auto &l = ht2.table[i];
-        for (auto &j : l)
-            insert(j.key, j.data);
-    }
-}
+
 
 template <typename Key, typename T>
 const T &HashTable<Key,T>::find(const Key& key) const {
@@ -123,8 +106,8 @@ void HashTable<Key,T>::insert(const Key &key, const T &data) {
 
 template <typename Key, typename T>
 void HashTable<Key,T>::resize_table() {
-    unsigned int new_size = first_prime_bigger(table.size()*2);
-    HashTable new_ht(r_max, new_size);
+    //unsigned int new_size = first_prime_bigger(table.size()*2);
+    HashTable new_ht(r_max, table.size()*2);
     for(unsigned int i=0;i<table.size();++i){
         auto list = table[i];
         for(auto& element : list){
@@ -143,6 +126,7 @@ void HashTable<Key,T>::erase(const Key &key) {
     for(auto i=l.begin(); i!= l.end();) {
         if ((*i).key == key) {
             l.erase(i);
+            --elements_count;
             break;
         }
     }
