@@ -17,7 +17,6 @@ public:
 
 template <class K, class T=int>
 class AVLTree{
-public: //TODO: remove after tests
     struct Node;
     Node *root;
     Compare<K>* compare;
@@ -26,7 +25,7 @@ public: //TODO: remove after tests
     Node *find_rec(const K &key, Node *n, Stack<Node *> *s = nullptr) const;
     Node *insert_rec(const K &key, const T &data, Node *n, Stack<Node *> *s);
     Array<Node> to_array() const;
-    static Node *arr2tree(const AVLTree::Node* const arr, int n);
+    static Node *arr2tree(const AVLTree::Node* arr, int n);
     static void balance_tree(Stack<Node*>*);
 public:
     class Iterator;
@@ -56,7 +55,6 @@ public:
 
 template <class K, class T>
 struct AVLTree<K,T>::Node{
-public: //TODO: remove after tests
     K key;
     T data;
     unsigned int height;

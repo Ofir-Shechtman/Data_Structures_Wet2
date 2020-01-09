@@ -16,7 +16,6 @@ public:
 
 template <typename Key, typename T>
 class HashTable {
-public://TODO: remove after test
     struct Element{
         Key key;
         T data;

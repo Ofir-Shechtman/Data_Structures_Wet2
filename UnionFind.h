@@ -18,7 +18,6 @@ public:
     const T& find(Key i) const;
     T& get(Key);
     class InvalidInput : public std::exception{};
-    void printArrs(); //TODO: remove
 };
 
 template <class T>
@@ -81,6 +80,7 @@ Key UnionFind<T>::findRoot(Key i) const{
     return i;
 }
 
+/*
 template <class K>
 void UnionFind<K>::printArrs() {
     for(Key i=0;i<elements.size();i++){
@@ -91,6 +91,6 @@ void UnionFind<K>::printArrs() {
     }
 }
 
-
+*/
 
 #endif //DATA_STRUCTURES_WET2_2_UNIONFIND_H
